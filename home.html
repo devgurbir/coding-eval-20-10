@@ -7,22 +7,38 @@
     <title>Document</title>
 </head>
 <style>
+    .searchDiv {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
     .container {
+        width: 80%;
         margin: 20px auto;
         display: flex;
         flex-wrap: wrap;
+        gap: 5%;
     }
     .user {
-        flex-basis: 30%;    
+        flex-basis: 40%;    
         border:1px solid black;
         margin-bottom: 10px;
         padding: 20px;
+        text-align: center;
     }
 
+    .pagination {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .active {
+        background-color: navy;
+        color: white;
+    }
 
 </style>
 <body>
-    Welcome home.
+    <h3>Search for Github user</h3>
     <div class="searchDiv">
         <input type="text" id='search' name='search' placeholder="Search for user"/>
         <button id='btn'>Search</button>

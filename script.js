@@ -1,9 +1,9 @@
 let currentPage = 1;
+let totalPages = 1;
 
 window.addEventListener('load', () => {
     const path = window.location.pathname
-    console.log(path)
-   
+ 
     if(path.includes('login')){
         const form = document.getElementById('form');
         form.addEventListener('submit', makeLoginReq)
@@ -74,7 +74,9 @@ function searchUsers(){
 }
 
 function handleUsers(data){
-    console.log(data)
+    
+    totalPages = Math.ceil(data.total_count / 10)
+    console.log(totalPages)
     const items = data.items
     
     const parentDiv = document.querySelector('.container');
@@ -109,7 +111,7 @@ function createPagination(){
     pagination.innerHTML = null;
 
     const prev = document.createElement('button')
-    prev.textContent = currentPage - 1;
+    prev.textContent = "Prev"
     prev.name = currentPage - 1;
     prev.addEventListener('click', handlePagination)
 
@@ -118,13 +120,21 @@ function createPagination(){
     }
 
     const current = document.createElement('button')
+    current.className = 'active'
     current.textContent = currentPage;
     current.name = currentPage;
 
     const next = document.createElement('button')
-    next.textContent = currentPage + 1;
-    next.name = currentPage + 1;
-    next.addEventListener('click', handlePagination)
+    next.textContent = "Next"
+    if(currentPage >= totalPages){
+        next.disabled = true;
+    }
+    else{
+        next.name = currentPage + 1;
+     next.addEventListener('click', handlePagination)
+    }
+    
+    
 
     pagination.append(prev, current, next)    
 }
