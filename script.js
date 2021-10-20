@@ -10,7 +10,8 @@ window.addEventListener('load', () => {
     
     
     if(path.includes('home.html')){
-        checkValid();        
+        checkValid();
+        searchUsers();
     }
 });
 
@@ -58,3 +59,26 @@ function checkValid(){
     }
 }
 
+function searchUsers(){
+    // const apiKey = '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'
+    //https://api.github.com/users/octocat
+    return fetch('https://api.github.com/search/users?q=gurbir&per_page=10')
+    .then( res => res.json() )
+    .then( res => handleUsers(res) )
+}
+
+function handleUsers(data){
+    const items = data.items
+    for(let user of items){
+        showUserData(user.login, user.html_url)
+    }
+}
+
+function showUserData(name, url){
+    const parentDiv = document.querySelector('.container');
+    
+    const user = document.createElement('p')
+    user.textContent = `Name: ${name}, URL: ${url}`
+
+    parentDiv.append(user)
+}
