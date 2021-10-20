@@ -1,3 +1,5 @@
+let currentPage = 1;
+
 window.addEventListener('load', () => {
     const path = window.location.pathname
     console.log(path)
@@ -11,7 +13,8 @@ window.addEventListener('load', () => {
     
     if(path.includes('home.html')){
         checkValid();
-        searchUsers();
+        const searchBtn = document.getElementById('btn')
+        searchBtn.addEventListener('click', searchUsers)
     }
 });
 
@@ -62,23 +65,73 @@ function checkValid(){
 function searchUsers(){
     // const apiKey = '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'
     //https://api.github.com/users/octocat
-    return fetch('https://api.github.com/search/users?q=gurbir&per_page=10')
+
+    const searchBar = document.getElementById('search')
+    const searchQuery = searchBar.value
+    return fetch(`https://api.github.com/search/users?q=${searchQuery}&per_page=10&page=${currentPage}`)
     .then( res => res.json() )
     .then( res => handleUsers(res) )
 }
 
 function handleUsers(data){
+    console.log(data)
     const items = data.items
+    
+    const parentDiv = document.querySelector('.container');
+    parentDiv.innerHTML = null;
+
     for(let user of items){
-        showUserData(user.login, user.html_url)
+        const div = showUserData(user.login, user.html_url)
+        parentDiv.append(div)
     }
+
+    createPagination();
 }
 
-function showUserData(name, url){
-    const parentDiv = document.querySelector('.container');
-    
-    const user = document.createElement('p')
-    user.textContent = `Name: ${name}, URL: ${url}`
+function showUserData(name, url){    
 
-    parentDiv.append(user)
+    const div = document.createElement('div');
+    div.className = 'user'
+    
+    const userName = document.createElement('p')
+    userName.textContent = `Name: ${name}`
+
+    const userLink = document.createElement('a')
+    userLink.setAttribute('href', url)
+    userLink.textContent = "Github Link"
+
+    div.append(userName, userLink)
+    return div;
+}
+
+function createPagination(){
+    const pagination = document.querySelector(".pagination");
+    pagination.innerHTML = null;
+
+    const prev = document.createElement('button')
+    prev.textContent = currentPage - 1;
+    prev.name = currentPage - 1;
+    prev.addEventListener('click', handlePagination)
+
+    if(currentPage == 1){
+        prev.disabled = true
+    }
+
+    const current = document.createElement('button')
+    current.textContent = currentPage;
+    current.name = currentPage;
+
+    const next = document.createElement('button')
+    next.textContent = currentPage + 1;
+    next.name = currentPage + 1;
+    next.addEventListener('click', handlePagination)
+
+    pagination.append(prev, current, next)    
+}
+
+function handlePagination(){
+    console.log(event.target.name);
+    currentPage = parseInt(event.target.name)
+    searchUsers();
+    
 }
