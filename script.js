@@ -1,6 +1,17 @@
 window.addEventListener('load', () => {
-    const form = document.getElementById('form');
-    form.addEventListener('submit', makeLoginReq)
+    const path = window.location.pathname
+    console.log(path)
+   
+    if(path.includes('login')){
+        const form = document.getElementById('form');
+        form.addEventListener('submit', makeLoginReq)
+    }
+    
+    
+    
+    if(path.includes('home.html')){
+        checkValid();        
+    }
 });
 
 function login(){
@@ -22,6 +33,28 @@ async function makeLoginReq(){
             "Content-type": "Application/json"
         }
     }).then( res => res.json() )
-    .then( res => console.log(res) )
+    .then( res => handleToken(res.token) )
+}
+
+function handleToken(token){
+    if(token){
+        localStorage.setItem('token', token)
+        window.location = 'home.html'   
+    }
+    else{
+        window.location = 'register.html'   
+    }    
+}
+
+function checkValid(){
+    const token = localStorage.getItem('token')
+    if(token){
+    console.log('valid')
+        return
+    }
+    else{
+        console.log('check')
+        window.location ='register.html'
+    }
 }
 
