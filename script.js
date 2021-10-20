@@ -74,6 +74,7 @@ function searchUsers(){
 }
 
 function handleUsers(data){
+    console.log(data)
     
     totalPages = Math.ceil(data.total_count / 10)
     console.log(totalPages)
@@ -83,18 +84,23 @@ function handleUsers(data){
     parentDiv.innerHTML = null;
 
     for(let user of items){
-        const div = showUserData(user.login, user.html_url)
+        const div = showUserData(user.login, user.html_url, user.avatar_url)
         parentDiv.append(div)
     }
 
     createPagination();
 }
 
-function showUserData(name, url){    
+function showUserData(name, url, imgUrl){    
 
     const div = document.createElement('div');
     div.className = 'user'
     
+    const img = document.createElement('img')
+    img.src = imgUrl
+    img.style.maxWidth = "200px";
+    img.style.height = "auto";
+
     const userName = document.createElement('p')
     userName.textContent = `Name: ${name}`
 
@@ -102,7 +108,7 @@ function showUserData(name, url){
     userLink.setAttribute('href', url)
     userLink.textContent = "Github Link"
 
-    div.append(userName, userLink)
+    div.append(img, userName, userLink)
     return div;
 }
 
